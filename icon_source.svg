@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!-- Deep blue rounded square background -->
+  <rect x="0" y="0" width="192" height="192" rx="40" ry="40" fill="#1565C0"/>
+
+  <!-- Camera body - rounded rectangle, white -->
+  <rect x="32" y="62" width="128" height="90" rx="14" ry="14" fill="white"/>
+
+  <!-- Camera notch/bump at top center -->
+  <rect x="72" y="46" width="48" height="24" rx="8" ry="8" fill="white"/>
+
+  <!-- Camera lens - outer ring (blue circle) -->
+  <circle cx="88" cy="107" r="28" fill="#1565C0"/>
+
+  <!-- Camera lens - inner ring (white) -->
+  <circle cx="88" cy="107" r="20" fill="white"/>
+
+  <!-- Camera lens - center (blue) -->
+  <circle cx="88" cy="107" r="12" fill="#1976D2"/>
+
+  <!-- Camera lens - highlight dot -->
+  <circle cx="83" cy="102" r="4" fill="white" opacity="0.6"/>
+
+  <!-- Tag/label icon at bottom right - overlapping the camera body -->
+  <!-- Tag background (orange-ish accent, but using a slightly lighter blue for cohesion) -->
+  <rect x="118" y="120" width="46" height="32" rx="6" ry="6" fill="#FFA726"/>
+
+  <!-- Tag lines (white horizontal lines to indicate text/note) -->
+  <rect x="125" y="128" width="30" height="4" rx="2" fill="white"/>
+  <rect x="125" y="136" width="22" height="4" rx="2" fill="white"/>
+
+  <!-- Small circle/hole on tag (tag punch hole) -->
+  <circle cx="127" cy="136" r="0" fill="white"/>
+</svg>
