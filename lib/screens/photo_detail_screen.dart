@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
 import '../services/database_service.dart';
 import '../models/comment.dart';
 import '../models/tag.dart';
@@ -303,6 +304,45 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
     }
   }
 
+  Future<void> _sharePhoto() async {
+    final textParts = <String>[];
+
+    // Add reaction if set
+    if (_currentReaction != null) {
+      textParts.add('Reaction: $_currentReaction');
+    }
+
+    // Add tags if any
+    if (_tags.isNotEmpty) {
+      final tagNames = _tags.map((tag) => tag.name).join(', ');
+      textParts.add('Tag: $tagNames');
+    }
+
+    // Add comments if any
+    if (_comments.isNotEmpty) {
+      textParts.add('Comments:');
+      for (var comment in _comments) {
+        textParts.add('- ${comment.text}');
+      }
+    }
+
+    final text = textParts.isEmpty ? '' : textParts.join('\n');
+
+    try {
+      final file = XFile(_currentImagePath);
+      await Share.shareXFiles(
+        [file],
+        text: text.isNotEmpty ? text : null,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to share: $e')),
+        );
+      }
+    }
+  }
+
   String _formatDateTime(DateTime dateTime) {
     return DateFormat('MMM d, y h:mm a').format(dateTime);
   }
@@ -331,6 +371,11 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
         title: const Text(''),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: 'Share',
+            onPressed: _sharePhoto,
+          ),
           IconButton(
             icon: const Icon(Icons.photo_camera),
             tooltip: 'Replace Photo',

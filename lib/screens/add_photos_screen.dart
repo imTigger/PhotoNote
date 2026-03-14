@@ -32,8 +32,11 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
   int _currentPhotoIndex = 0;
   final Map<int, String> _photoComments = {};
   final Map<int, List<String>> _photoTags = {};
+  final Map<int, String?> _photoReactions = {};
   final TextEditingController _commentController = TextEditingController();
   bool _isProcessing = false;
+
+  static const List<String> _availableReactions = ['👍🏻', '👎🏻', '✅', '❌', '🤣', '😍'];
 
   @override
   void initState() {
@@ -140,6 +143,18 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
     });
   }
 
+  void _setReaction(String reaction) {
+    setState(() {
+      final currentReaction = _photoReactions[_currentPhotoIndex];
+      if (currentReaction == reaction) {
+        // Remove reaction if tapping the same one
+        _photoReactions[_currentPhotoIndex] = null;
+      } else {
+        _photoReactions[_currentPhotoIndex] = reaction;
+      }
+    });
+  }
+
   Future<void> _createNewFolder() async {
     final controller = TextEditingController();
     final result = await showDialog<String>(
@@ -228,6 +243,12 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
           createdAt: DateTime.now(),
         );
         final photoId = await DatabaseService.instance.createPhoto(photo);
+
+        // Save reaction if set
+        final reaction = _photoReactions[i];
+        if (reaction != null) {
+          await DatabaseService.instance.updatePhotoReaction(photoId, reaction);
+        }
 
         // Combine batch tags and per-photo tags
         final allTags = <String>{..._batchTags, ...(_photoTags[i] ?? [])}.toList();
@@ -358,6 +379,33 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
                       File(_selectedImages[_currentPhotoIndex].path),
                       height: 200,
                       fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Reaction:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: _availableReactions.map((reaction) {
+                        final isSelected = _photoReactions[_currentPhotoIndex] == reaction;
+                        return GestureDetector(
+                          onTap: () => _setReaction(reaction),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: isSelected ? Colors.blue.shade100 : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: isSelected ? Colors.blue : Colors.grey.shade300,
+                                width: 2,
+                              ),
+                            ),
+                            child: Text(
+                              reaction,
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 16),
                     const Text('Tags (for this photo only):', style: TextStyle(fontWeight: FontWeight.bold)),
