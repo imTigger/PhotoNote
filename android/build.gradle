@@ -23,7 +23,23 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin('com.android.application') ||
+            project.plugins.hasPlugin('com.android.library')) {
+            project.android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+            }
+        }
+
+        project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
 }
 
 tasks.register("clean", Delete) {
