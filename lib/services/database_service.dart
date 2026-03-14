@@ -358,6 +358,16 @@ class DatabaseService {
     return result.map((map) => Comment.fromMap(map)).toList();
   }
 
+  Future<void> updateComment(int commentId, String newText) async {
+    final db = await database;
+    await db.update(
+      'comments',
+      {'text': newText},
+      where: 'id = ?',
+      whereArgs: [commentId],
+    );
+  }
+
   Future<void> deleteComment(int commentId) async {
     final db = await database;
     await db.delete('comments', where: 'id = ?', whereArgs: [commentId]);

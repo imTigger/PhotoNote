@@ -171,6 +171,43 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
     _loadData();
   }
 
+  Future<void> _editComment(Comment comment) async {
+    final controller = TextEditingController(text: comment.text);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Comment'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'Comment text',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+            autofocus: true,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null && result.trim().isNotEmpty && result != comment.text) {
+      await DatabaseService.instance.updateComment(comment.id!, result.trim());
+      _loadData();
+    }
+  }
+
   Future<void> _deleteComment(Comment comment) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -184,7 +221,6 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),
           ),
         ],
@@ -570,7 +606,7 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
                             return Card(
                               margin: const EdgeInsets.only(bottom: 8),
                               child: Padding(
-                                padding: const EdgeInsets.all(12),
+                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 12),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -597,12 +633,25 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
                                             ],
                                           ),
                                         ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete, size: 20),
-                                          color: Colors.red,
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                          onPressed: () => _deleteComment(comment),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.edit, size: 20),
+                                              color: Colors.grey,
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
+                                              onPressed: () => _editComment(comment),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete, size: 20),
+                                              color: Colors.grey,
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
+                                              onPressed: () => _deleteComment(comment),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
