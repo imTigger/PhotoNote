@@ -380,8 +380,6 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
                       height: 200,
                       fit: BoxFit.contain,
                     ),
-                    const SizedBox(height: 16),
-                    const Text('Reaction:', style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -408,7 +406,7 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
-                    const Text('Tags (for this photo only):', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text('Tags:', style: TextStyle(fontWeight: FontWeight.bold)),
                     Row(
                       children: [
                         Expanded(

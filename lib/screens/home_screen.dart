@@ -391,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Icon(Icons.upload_file),
                     SizedBox(width: 8),
-                    Text('Data Export'),
+                    Text('Export'),
                   ],
                 ),
               ),
@@ -401,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Icon(Icons.download),
                     SizedBox(width: 8),
-                    Text('Data Import'),
+                    Text('Import'),
                   ],
                 ),
               ),
