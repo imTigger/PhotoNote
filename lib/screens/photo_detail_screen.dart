@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:exif/exif.dart';
 import '../services/database_service.dart';
 import '../models/comment.dart';
 import '../models/tag.dart';
@@ -383,6 +384,101 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
     return DateFormat('MMM d, y h:mm a').format(dateTime);
   }
 
+  Future<void> _showPhotoInfo() async {
+    if (_photo == null) return;
+
+    // Extract EXIF data
+    Map<String, IfdTag>? exifData;
+    try {
+      final bytes = await File(_currentImagePath).readAsBytes();
+      exifData = await readExifFromBytes(bytes);
+    } catch (e) {
+      // EXIF reading failed, continue without it
+    }
+
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Photo Info'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildInfoRow('Created', _formatDateTime(_photo!.createdAt)),
+              if (exifData != null && exifData.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Text(
+                  'EXIF Data',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const Divider(),
+                if (exifData['Image DateTime'] != null)
+                  _buildInfoRow('Date Taken', exifData['Image DateTime'].toString()),
+                if (exifData['Image Make'] != null)
+                  _buildInfoRow('Camera Make', exifData['Image Make'].toString()),
+                if (exifData['Image Model'] != null)
+                  _buildInfoRow('Camera Model', exifData['Image Model'].toString()),
+                if (exifData['EXIF ExposureTime'] != null)
+                  _buildInfoRow('Exposure Time', exifData['EXIF ExposureTime'].toString()),
+                if (exifData['EXIF FNumber'] != null)
+                  _buildInfoRow('F-Number', exifData['EXIF FNumber'].toString()),
+                if (exifData['EXIF ISOSpeedRatings'] != null)
+                  _buildInfoRow('ISO', exifData['EXIF ISOSpeedRatings'].toString()),
+                if (exifData['EXIF FocalLength'] != null)
+                  _buildInfoRow('Focal Length', exifData['EXIF FocalLength'].toString()),
+                if (exifData['GPS GPSLatitude'] != null && exifData['GPS GPSLongitude'] != null)
+                  _buildInfoRow('GPS', '${exifData['GPS GPSLatitude']}, ${exifData['GPS GPSLongitude']}'),
+                if (exifData['Image ImageWidth'] != null)
+                  _buildInfoRow('Width', exifData['Image ImageWidth'].toString()),
+                if (exifData['Image ImageLength'] != null)
+                  _buildInfoRow('Height', exifData['Image ImageLength'].toString()),
+              ] else ...[
+                const SizedBox(height: 16),
+                const Text(
+                  'No EXIF data available',
+                  style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                ),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black87),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showFullscreenPhoto() async {
     final newIndex = await Navigator.of(context).push<int>(
       MaterialPageRoute(
@@ -407,6 +503,11 @@ class _PhotoDetailScreenState extends State<PhotoDetailScreen> {
         title: const Text(''),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Photo Info',
+            onPressed: _showPhotoInfo,
+          ),
           IconButton(
             icon: const Icon(Icons.share),
             tooltip: 'Share',
