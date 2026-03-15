@@ -97,7 +97,7 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
     final image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null) {
       setState(() {
-        _selectedImages = [image];
+        _selectedImages = [..._selectedImages, image];
       });
     }
   }
@@ -105,7 +105,7 @@ class _AddPhotosScreenState extends State<AddPhotosScreen> {
   Future<void> _pickImages() async {
     final images = await _picker.pickMultiImage();
     setState(() {
-      _selectedImages = images;
+      _selectedImages = [..._selectedImages, ...images];
     });
   }
 
