@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'dart:async';
@@ -5,9 +7,19 @@ import 'screens/home_screen.dart';
 import 'screens/add_photos_screen.dart';
 import 'services/database_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux) {
+    // Initialize FFI
+    sqfliteFfiInit();
+  }
+
+  databaseFactory = databaseFactoryFfi;
+
   await DatabaseService.instance.database;
   runApp(const PhotoNoteApp());
 }
