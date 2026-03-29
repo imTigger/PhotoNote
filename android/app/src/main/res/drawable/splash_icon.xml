@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Derived from icon_foreground.svg so the Android 12+ splash uses vector art. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M35,42H73A5,5 0,0 1,78 47V69A5,5 0,0 1,73 74H35A5,5 0,0 1,30 69V47A5,5 0,0 1,35 42Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,34H60A3,3 0,0 1,63 37V42A3,3 0,0 1,60 45H48A3,3 0,0 1,45 42V37A3,3 0,0 1,48 34Z" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M54,48A10,10 0,1 1,54 68A10,10 0,1 1,54 48Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,51A7,7 0,1 1,54 65A7,7 0,1 1,54 51Z" />
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M54,54A4,4 0,1 1,54 62A4,4 0,1 1,54 54Z" />
+    <path
+        android:fillColor="#99FFFFFF"
+        android:pathData="M52,54.5A1.5,1.5 0,1 1,52 57.5A1.5,1.5 0,1 1,52 54.5Z" />
+    <path
+        android:fillColor="#FFA726"
+        android:pathData="M72,60H81A3,3 0,0 1,84 63V71A3,3 0,0 1,81 74H72A3,3 0,0 1,69 71V63A3,3 0,0 1,72 60Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M73,63H80A1,1 0,0 1,81 64A1,1 0,0 1,80 65H73A1,1 0,0 1,72 64A1,1 0,0 1,73 63Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M73,67H79A1,1 0,0 1,80 68A1,1 0,0 1,79 69H73A1,1 0,0 1,72 68A1,1 0,0 1,73 67Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M73,71H77A1,1 0,0 1,78 72A1,1 0,0 1,77 73H73A1,1 0,0 1,72 72A1,1 0,0 1,73 71Z" />
+</vector>
